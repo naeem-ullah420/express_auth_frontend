@@ -6,6 +6,12 @@ import Login from './pages/LoginPage';
 // import { ArrowRight, Person, PersonFill } from 'react-bootstrap-icons';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
+import HomePage from './pages/HomePage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import ProtectedNavbarLayout from './layouts/ProtectedNavbarLayout';
+import UnProtectedLayout from './layouts/UnProtectedLayout';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -13,8 +19,21 @@ function App() {
     <Toaster position="top-right"/>
     <BrowserRouter>
         <Routes>
-            <Route path='/signUp' element={<SignUp/>}></Route>
-            <Route path='/login' element={<Login/>}></Route>
+
+            {/* non-protected routes */}
+            <Route element={<UnProtectedLayout/>}>
+              <Route path='/signUp' element={<SignUp/>}></Route>
+              <Route path='/login' element={<Login/>}></Route>
+              <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
+              <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
+            </Route>
+
+            {/* protected routes */}
+            <Route element={<ProtectedNavbarLayout/>}>
+              <Route path='/' element={<HomePage/>}></Route>
+            </Route>
+
+            <Route path='*' element={<NotFound/>}></Route>
         </Routes>
     </BrowserRouter>
     </div>

@@ -6,46 +6,39 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate, NavLink } from "react-router-dom";
 
-function Login() {
+function ForgotPassword() {
   const navigate = useNavigate();
   const failedNotify = (m) => toast.error(m);
   const successfulNotify = (m) => toast.success(m);
 
   const initial_payload = {
     email: "",
-    password: "",
   };
 
-  const [LoginPayload, setLoginPayload] = useState(initial_payload);
+  const [ForgotPasswordPayload, setForgotPasswordPayload] = useState(initial_payload);
 
   const handleChange = (e) => {
     let value = e.target.value;
-
-    if (e.target.name == "accept_terms_and_conditions") {
-      value = e.target.checked;
-    }
-
-    setLoginPayload({
-      ...LoginPayload,
+    setForgotPasswordPayload({
+      ...ForgotPasswordPayload,
       [e.target.name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("LoginPayload: ", LoginPayload);
-    // submit Login request
+    console.log("ForgotPasswordPayload: ", ForgotPasswordPayload);
+    // submit ForgotPassword request
     try {
       const response = await axios({
         method: "post",
-        url: "http://127.0.0.1:8000/api/auth/login",
-        data: LoginPayload,
+        url: "http://127.0.0.1:8000/api/auth/forgotPassword",
+        data: ForgotPasswordPayload,
       });
       console.log("response: ", response.data.token);
-      localStorage.setItem("token", response.data.token)
-      successfulNotify("Login Successful");
-      setLoginPayload(initial_payload);
-      navigate("/");
+      successfulNotify("ForgotPassword Successful");
+      setForgotPasswordPayload(initial_payload);
+      // navigate("/");
     } catch (error) {
       failedNotify(error.response.data.message);
     }
@@ -58,30 +51,17 @@ function Login() {
           height: "100vh",
         }}
       >
-        <Col className="pt-4 px-5" md={5}>
+        <Col className="pt-4 px-5 mt-5" md={5}>
           <Form className="py-4 px-2" onSubmit={handleSubmit}>
-            <h2 className="text-center">Login</h2>
-            <Form.Group className="mb-3">
+            <h2 className="text-center">ForgotPassword</h2>
+            <Form.Group className="mb-3 mt-5">
               <Form.Label>Email address</Form.Label>
               <Form.Control 
                 type="email"
                 placeholder="Your Email"
                 name="email"
-                value={LoginPayload.email}
+                value={ForgotPasswordPayload.email}
                 onChange={handleChange} 
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label className="w-100">
-                <span className="mr-auto">Password</span>
-                <NavLink to="/forgotPassword" className="float-end">Forgot Password</NavLink>
-              </Form.Label>
-              <Form.Control 
-                type="password"
-                placeholder="Password"
-                name="password"
-                value={LoginPayload.password}
-                onChange={handleChange}
               />
             </Form.Group>
             <Row>
@@ -91,13 +71,13 @@ function Login() {
                   type="submit"
                   className="align-self-center w-100"
                 >
-                  Login
+                  ForgotPassword
                 </Button>
               </Col>
             </Row>
             <Row>
               <Col>
-              <NavLink to="/signup">Not Already registered ?</NavLink>
+              <NavLink to="/login">Back to login?</NavLink>
               </Col>
             </Row>
           </Form>
@@ -117,4 +97,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ForgotPassword;
