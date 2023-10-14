@@ -46,9 +46,12 @@ const successfulNotify = (m) => toast.success(m)
       <Row style={{
         height: "100vh"
       }}>
-        <Col className="pt-4 px-5" md={4}>
-          <h2 className='text-center'>Sign Up</h2>
-          <Form className='pt-4' onSubmit={handleSubmit}>
+        <Col className="pt-4 px-5" md={5}>
+          <Form className='py-4 px-2' onSubmit={handleSubmit} style={{
+            // border:"2px solid #BFBFBF"
+            boxShadow:"7px 11px 49px -1px rgba(0,0,0,0.57);"
+          }}>
+            <h2 className='text-center'>Sign Up</h2>
             <Form.Control type='text' placeholder='Your Name' name='name' className='mt-4' value={signUpPayload.name} onChange={handleChange} />
             <Form.Control type='email' placeholder='Your Email' name="email" className='mt-4' value={signUpPayload.email} onChange={handleChange}/>
             <Form.Control type='password' placeholder='Password' name="password" className='mt-4' value={signUpPayload.password} onChange={handleChange}/>
@@ -57,7 +60,7 @@ const successfulNotify = (m) => toast.success(m)
             <Button variant="primary" type='submit' className='mt-4 align-self-center'>Register</Button>
           </Form>
         </Col>
-        <Col md={8} className="d-flex justify-content-center align-items-center">
+        <Col md={7} className="d-flex justify-content-center align-items-center">
           <Image width="400px" height="400px" src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp' />
         </Col>
       </Row>
