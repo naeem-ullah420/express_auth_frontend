@@ -7,19 +7,26 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import AddProduct from '../components/HomePageComponents/AddProduct'
 import SideBar from '../components/HomePageComponents/SideBar'
+import Product from '../components/HomePageComponents/Product'
 import Pagination from 'react-bootstrap/Pagination';
 import { PaginationControl } from 'react-bootstrap-pagination-control';
+import { useContext } from 'react'
+import { ProdutContext, useProducts } from '../store/ProductContext'
 
 function HomePage() {
-  let [products, setProducts] = useState([])
+  // let [products, setProducts] = useState([])
+  const {products, setProducts} = useProducts()
   let [loading, setLoading] = useState(true)
-  let [page, setPage] = useState(1)
-  let [pageinationDetail, setPaginationDetail] = useState({
-    "current_page": 0,
-    "total_count": 0,
-    "total_pages": 0,
-  })
-  let [search, setSearch] = useState("")
+  // let [page, setPage] = useState(1)
+  const {page, setPage} = useProducts()
+  // let [pageinationDetail, setPaginationDetail] = useState({
+  //   "current_page": 0,
+  //   "total_count": 0,
+  //   "total_pages": 0,
+  // })
+  const {pageinationDetail, setPaginationDetail} = useProducts()
+  // let [search, setSearch] = useState("")
+  const {search, setSearch} = useProducts()
 
   useEffect(() => {
       axios({
@@ -43,15 +50,17 @@ function HomePage() {
     }).finally(() => {
       setLoading(false)
     });
-    
   }, [page, search])
 
   const productAdd = (product) => {
-    setProducts([ product, ...products])
+    const new_products = [ product, ...products]
+    new_products.length >= 10 && new_products.splice(10, 1)
+    setProducts(new_products)
     setPage(1)
   }
 
   const handleSearch = (search_text) => {
+    setPage(1)
     setSearch(search_text)
   }
 
@@ -61,7 +70,7 @@ function HomePage() {
     <Container fluid>
         <Row >
             <Col xs={2}>
-              <SideBar handleSearch={handleSearch}/>
+              <SideBar handleSearch={handleSearch} search_text={search}/>
             </Col>
             <Col md={10}>
               <AddProduct productAdd={productAdd}/>
@@ -71,16 +80,7 @@ function HomePage() {
                 {!loading && products.map(p => {
                   return (
                     <Col md={3} className='p-2'>
-                      <Card>
-                        <Card.Img variant="top" style={{height:"200px"}} src={p.image_url} />
-                        <Card.Body>
-                          <Card.Title>{p.name}</Card.Title>
-                          <Card.Text>
-                            {p.description}
-                          </Card.Text>
-                          <Button variant="primary">Add to Cart</Button>
-                        </Card.Body>
-                      </Card>
+                      <Product product={p} />
                     </Col>
                   )
                 })}
