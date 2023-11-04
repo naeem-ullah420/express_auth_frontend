@@ -7,16 +7,24 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import AddProduct from '../components/HomePageComponents/AddProduct'
 import SideBar from '../components/HomePageComponents/SideBar'
-
+import Pagination from 'react-bootstrap/Pagination';
+import { PaginationControl } from 'react-bootstrap-pagination-control';
 
 function HomePage() {
   let [products, setProducts] = useState([])
   let [loading, setLoading] = useState(true)
+  let [page, setPage] = useState(1)
+  let [pageinationDetail, setPaginationDetail] = useState({
+    "current_page": 0,
+    "total_count": 0,
+    "total_pages": 0,
+  })
+  let [search, setSearch] = useState("")
 
   useEffect(() => {
       axios({
       method: 'get',
-      url: 'http://localhost:8000/api/product/read',
+      url: `http://localhost:8000/api/product/read?page=${page}&search=${search}`,
       headers: {
         'token': localStorage.getItem('token')
       }
@@ -24,6 +32,11 @@ function HomePage() {
     .then(function (response) {
       console.log(JSON.stringify(response.data));
       setProducts(response.data.data.products)
+      setPaginationDetail({
+        'current_page': response.data.data.current_page,
+        'total_count': response.data.data.total_count,
+        'total_pages': response.data.data.total_pages,
+      })
     })
     .catch(function (error) {
       console.log(error);
@@ -31,10 +44,15 @@ function HomePage() {
       setLoading(false)
     });
     
-  }, [])
+  }, [page, search])
 
   const productAdd = (product) => {
     setProducts([ product, ...products])
+    setPage(1)
+  }
+
+  const handleSearch = (search_text) => {
+    setSearch(search_text)
   }
 
 
@@ -43,7 +61,7 @@ function HomePage() {
     <Container fluid>
         <Row >
             <Col xs={2}>
-              <SideBar/>
+              <SideBar handleSearch={handleSearch}/>
             </Col>
             <Col md={10}>
               <AddProduct productAdd={productAdd}/>
@@ -66,9 +84,22 @@ function HomePage() {
                     </Col>
                   )
                 })}
+                {!loading && !products.length && <Col md={12}>No products found</Col>}
+                <Col md={12} className='mt-4 d-flex justify-content-end'>
+                {!loading && <PaginationControl
+                  page={page}
+                  between={4}
+                  total={pageinationDetail.total_count}
+                  limit={10}
+                  changePage={(page) => {
+                    setPage(page)
+                  }}
+                  ellipsis={1}
+                />}
+                  </Col>
               </Row>
-
             </Col>
+
         </Row>
     </Container>
     </>
