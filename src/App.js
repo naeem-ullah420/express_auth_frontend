@@ -12,6 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 import ProtectedNavbarLayout from './layouts/ProtectedNavbarLayout';
 import UnProtectedLayout from './layouts/UnProtectedLayout';
 import NotFound from './pages/NotFound';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             {/* protected routes */}
             <Route element={<ProtectedNavbarLayout/>}>
               <Route path='/' element={<HomePage/>}></Route>
+              <Route path='/product/:productId' element={<ProductDetailPage/>}></Route>
             </Route>
 
             <Route path='*' element={<NotFound/>}></Route>
