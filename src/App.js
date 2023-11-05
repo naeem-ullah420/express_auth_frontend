@@ -13,31 +13,34 @@ import ProtectedNavbarLayout from './layouts/ProtectedNavbarLayout';
 import UnProtectedLayout from './layouts/UnProtectedLayout';
 import NotFound from './pages/NotFound';
 import ProductDetailPage from './pages/ProductDetailPage';
+import {ProductContextProvider} from './contexts/ProductContext'
 
 function App() {
   return (
     <div>
     <Toaster position="top-right"/>
-    <BrowserRouter>
-        <Routes>
+    <ProductContextProvider>
+      <BrowserRouter>
+          <Routes>
 
-            {/* non-protected routes */}
-            <Route element={<UnProtectedLayout/>}>
-              <Route path='/signUp' element={<SignUp/>}></Route>
-              <Route path='/login' element={<Login/>}></Route>
-              <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
-              <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
-            </Route>
+              {/* non-protected routes */}
+              <Route element={<UnProtectedLayout/>}>
+                <Route path='/signUp' element={<SignUp/>}></Route>
+                <Route path='/login' element={<Login/>}></Route>
+                <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
+                <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
+              </Route>
 
-            {/* protected routes */}
-            <Route element={<ProtectedNavbarLayout/>}>
-              <Route path='/' element={<HomePage/>}></Route>
-              <Route path='/product/:productId' element={<ProductDetailPage/>}></Route>
-            </Route>
+              {/* protected routes */}
+              <Route element={<ProtectedNavbarLayout/>}>
+                <Route path='/' element={<HomePage/>}></Route>
+                <Route path='/product/:productId' element={<ProductDetailPage/>}></Route>
+              </Route>
 
-            <Route path='*' element={<NotFound/>}></Route>
-        </Routes>
-    </BrowserRouter>
+              <Route path='*' element={<NotFound/>}></Route>
+          </Routes>
+      </BrowserRouter>
+    </ProductContextProvider>
     </div>
   )
 }

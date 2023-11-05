@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import NavBar from '../components/Nav'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useEffect } from 'react'
@@ -9,18 +9,24 @@ import AddProduct from '../components/HomePageComponents/AddProduct'
 import SideBar from '../components/HomePageComponents/SideBar'
 import Product from '../components/HomePageComponents/Product'
 import { PaginationControl } from 'react-bootstrap-pagination-control';
+import { ProductContext, useProduct } from '../contexts/ProductContext'
 
 function HomePage() {
-  let [products, setProducts] = useState([])
+  // let [products, setProducts] = useState([])
+  let {products, setProducts} = useProduct()
   let [loading, setLoading] = useState(true)
-  let [page, setPage] = useState(1)
+  // let [page, setPage] = useState(1)
+  let {page, setPage} = useProduct()
+  // let [search, setSearch] = useState("")
+  let {search, setSearch} = useProduct()
+
+
   let [paginationDetail, setPaginationDetail] = useState({
     "per_page": 10,
     "total": 0,
     "current_page": 1,
     "total_pages": 0
   })
-  let [search, setSearch] = useState("")
 
   useEffect(() => {
     console.log("page: ", page)
@@ -41,21 +47,24 @@ function HomePage() {
     .finally(() => {
       setLoading(false)
     });
-    
-    
   }, [page, search])
 
   const productAdd = (product) => {
+    setPage(1)
     setProducts([ product, ...products])
   }
 
+  const handleSearch = (search_text) => {
+    setPage(1)
+    setSearch(search_text)
+  }
 
   return (
     <>
     <Container fluid>
         <Row >
             <Col xs={2}>
-              <SideBar setSearch={setSearch}/>
+              <SideBar setSearch={handleSearch} search={search}/>
             </Col>
             <Col md={10}>
               <AddProduct productAdd={productAdd}/>
