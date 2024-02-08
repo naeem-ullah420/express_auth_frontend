@@ -10,8 +10,13 @@ import SideBar from '../components/HomePageComponents/SideBar'
 import Product from '../components/HomePageComponents/Product'
 import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { ProductContext, useProduct } from '../contexts/ProductContext'
+import { useApi } from '../hooks/useApi'
+import { useCategoriesContext } from '../contexts/CategoriesContext'
 
 function HomePage() {
+  let {loading: categoryApiLoading, data:categoryApiData, error:categoryApiError} = useApi('http://localhost:8000/api/categories/read')
+
+  let {categories, setCategories} = useCategoriesContext()
   // let [products, setProducts] = useState([])
   let {products, setProducts} = useProduct()
   let [loading, setLoading] = useState(true)
@@ -20,6 +25,7 @@ function HomePage() {
   // let [search, setSearch] = useState("")
   let {search, setSearch} = useProduct()
 
+  let {category, setCategory} = useProduct()
 
   let [paginationDetail, setPaginationDetail] = useState({
     "per_page": 10,
@@ -29,10 +35,18 @@ function HomePage() {
   })
 
   useEffect(() => {
+
+    if(!categoryApiLoading && categoryApiData) {
+        setCategories([...categoryApiData.data.categories])
+    }
+
+}, [categoryApiLoading])
+
+  useEffect(() => {
     console.log("page: ", page)
       axios({
       method: 'get',
-      url: `http://localhost:8000/api/product/read?page=${page}&search=${search}`,
+      url: `http://localhost:8000/api/product/read?page=${page}&search=${search}&category_id=${category ? category._id : ""}`,
       headers: {
         'token': localStorage.getItem('token')
       }
@@ -47,7 +61,7 @@ function HomePage() {
     .finally(() => {
       setLoading(false)
     });
-  }, [page, search])
+  }, [page, search, category])
 
   const productAdd = (product) => {
     setPage(1)
