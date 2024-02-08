@@ -15,7 +15,7 @@ function NavBar(props) {
   const logout = () => {
     axios({
       method: 'get',
-      url: `http://localhost:8000/api/auth/logout`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/api/auth/logout`,
       headers: {
         'token': localStorage.getItem('token')
       }

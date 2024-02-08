@@ -14,7 +14,7 @@ import { useApi } from '../hooks/useApi'
 import { useCategoriesContext } from '../contexts/CategoriesContext'
 
 function HomePage() {
-  let {loading: categoryApiLoading, data:categoryApiData, error:categoryApiError} = useApi('http://localhost:8000/api/categories/read')
+  let {loading: categoryApiLoading, data:categoryApiData, error:categoryApiError} = useApi('${process.env.REACT_APP_BACKEND_URL}/api/categories/read')
 
   let {categories, setCategories} = useCategoriesContext()
   // let [products, setProducts] = useState([])
@@ -46,7 +46,7 @@ function HomePage() {
     console.log("page: ", page)
       axios({
       method: 'get',
-      url: `http://localhost:8000/api/product/read?page=${page}&search=${search}&category_id=${category ? category._id : ""}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/api/product/read?page=${page}&search=${search}&category_id=${category ? category._id : ""}`,
       headers: {
         'token': localStorage.getItem('token')
       }
