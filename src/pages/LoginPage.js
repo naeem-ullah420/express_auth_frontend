@@ -38,7 +38,7 @@ function Login() {
     try {
       const response = await axios({
         method: "post",
-        url: "http://127.0.0.1:8000/api/auth/login",
+        url: `${process.env.REACT_APP_BACKEND_URL}/api/auth/login`,
         data: LoginPayload,
       });
       console.log("response: ", response.data.token);

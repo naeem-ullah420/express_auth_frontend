@@ -22,7 +22,7 @@ function ProtectedNavbarLayout() {
     }
 
 
-    axios.get('http://127.0.0.1:8000/api/auth/readProfile', {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/auth/readProfile`, {
       headers: {'token': auth_token}
     }).then(res => {
       console.log(res)

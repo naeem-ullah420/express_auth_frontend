@@ -14,7 +14,7 @@ import { useApi } from '../hooks/useApi'
 import { useCategoriesContext } from '../contexts/CategoriesContext'
 
 function HomePage() {
-  let {loading: categoryApiLoading, data:categoryApiData, error:categoryApiError} = useApi('${process.env.REACT_APP_BACKEND_URL}/api/categories/read')
+  let {loading: categoryApiLoading, data:categoryApiData, error:categoryApiError} = useApi(`${process.env.REACT_APP_BACKEND_URL}/api/categories/read`)
 
   let {categories, setCategories} = useCategoriesContext()
   // let [products, setProducts] = useState([])
@@ -85,15 +85,15 @@ function HomePage() {
               <div className='clearfix'></div>
               <Row>
                 {loading && <Col md={12}>Loading products....</Col>}
-                {!loading && products.length === 0 && <Col md={12}>No products found</Col>}
-                {!loading && products.length > 0 && products.map(p => {
+                {!loading && !products && <Col md={12}>No products found</Col>}
+                {!loading && products && products.map(p => {
                   return (
                     <Col md={3} className='p-2'>
                       <Product product={p}/>
                     </Col>
                   )
                 })}
-                {!loading && products.length > 0 && <Col md={12} className='mt-4 d-flex justify-content-end'>
+                {!loading && products && <Col md={12} className='mt-4 d-flex justify-content-end'>
                 <PaginationControl
                   page={page}
                   total={paginationDetail.total}

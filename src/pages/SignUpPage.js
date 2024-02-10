@@ -43,7 +43,7 @@ const successfulNotify = (m) => toast.success(m)
     try {
         const response = await axios({
             method: 'post',
-            url: 'http://127.0.0.1:8000/api/auth/signup',
+            url: `${process.env.REACT_APP_BACKEND_URL}/api/auth/signup`,
             data : signUpPayload
         })
         console.log("response: ", response)

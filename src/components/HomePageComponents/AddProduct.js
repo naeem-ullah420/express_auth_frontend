@@ -47,7 +47,7 @@ function AddProduct({productAdd}) {
 
     let config = {
       method: 'post',
-      url: '${process.env.REACT_APP_BACKEND_URL}/api/product/create',
+      url: `${process.env.REACT_APP_BACKEND_URL}/api/product/create`,
       headers: { 
         'token': localStorage.getItem('token'), 
       },
