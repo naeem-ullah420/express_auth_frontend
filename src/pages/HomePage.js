@@ -22,9 +22,10 @@ function HomePage() {
   const {pageinationDetail, setPaginationDetail} = useProducts()
   const {search, setSearch} = useProducts()
   const {categories, setCategories} = useCategories()
+  const {selectedCategory, setSelectedCategory} = useProducts()
 
   const {loading: categoryApiLoading, data:categoryApidata, error: categoryApiError} = useApi("GET", "http://localhost:8000/api/categories/read")
-  const {loading: productsApiLoading, data:productsApidata, error: productsApiError} = useApi("GET", `http://localhost:8000/api/product/read?page=${page}&search=${search}`)
+  const {loading: productsApiLoading, data:productsApidata, error: productsApiError} = useApi("GET", `http://localhost:8000/api/product/read?page=${page}&search=${search}&category_id=${selectedCategory}`)
 
   useEffect(()=> {
     if(categoryApidata) {
@@ -41,7 +42,7 @@ function HomePage() {
         'total_pages': productsApidata.data.total_pages,
       })
     }
-  }, [productsApidata, page, search])
+  }, [productsApidata, page, search, selectedCategory])
 
   const productAdd = (product) => {
     const new_products = [ product, ...products]

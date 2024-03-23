@@ -16,13 +16,15 @@ const ProductProvider = ({children}) => {
 
     const [page, setPage] = useState(1)
     const [search, setSearch] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState("")
 
 
     return <ProdutContext.Provider value={{
         products, setProducts, 
         pageinationDetail, setPaginationDetail, 
         page, setPage,
-        search, setSearch
+        search, setSearch,
+        selectedCategory, setSelectedCategory
     }}>
         {children}
     </ProdutContext.Provider>

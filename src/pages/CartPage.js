@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useCartContext } from "../store/CartContext";
+import { NavLink } from "react-router-dom";
 
 function CartPage() {
   let { storeProducts, addProduct, removeProduct } = useCartContext();
@@ -12,7 +13,8 @@ function CartPage() {
         </Col>
         <Col md={8}>
           <div>
-            <b>{product.name}</b>
+            {/* <b>{product.name}</b> */}
+            <NavLink to={`/product/${product._id}`}>{product.name}</NavLink>
           </div>
           <div className="my-2">{product.description}</div>
           <Button variant="danger" onClick={() => removeProduct(product)}>
