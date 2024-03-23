@@ -3,8 +3,10 @@ import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios'
+import { useCategories } from '../../store/CategoriesContext';
 
 function AddProduct({productAdd}) {
+  const { categories } = useCategories()
   const [requestPayload, setrequestPayload] = useState({})
   const [show, setShow] = useState(false);
 
@@ -74,6 +76,13 @@ function AddProduct({productAdd}) {
         <Form onSubmit={handleSubmit}>
             <Form.Control type='text' placeholder='Name' name='name'  onChange={handleChange} />
             <Form.Control type='text' placeholder='Description' name="description" className='mt-4' onChange={handleChange}/>
+            <Form.Control type='number' placeholder='Price in dollars ($)' name="price" className='mt-4' onChange={handleChange}/>
+            <Form.Select aria-label="Default select example" className='mt-4' name="category_id" onChange={handleChange} >
+              <option>Select Category</option>
+              {categories.map(category => {
+                return <option key={category._id} value={category._id}>{category.name}</option>
+              })}
+            </Form.Select>
             <Form.Control type="file" name="image" className='mt-4'onChange={handleChange}/>
             <Button
                   variant="primary"

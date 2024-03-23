@@ -14,32 +14,39 @@ import UnProtectedLayout from './layouts/UnProtectedLayout';
 import NotFound from './pages/NotFound';
 import ProductDetailPage from './pages/ProductDetailPage';
 import { ProductProvider } from './store/ProductContext';
+import CartPage from './pages/CartPage';
+import { CategoryProvider } from './store/CategoriesContext';
+import { CartContextProvider } from './store/CartContext';
 
 function App() {
   return (
     <div>
     <Toaster position="top-right"/>
     <ProductProvider>
-      <BrowserRouter>
-          <Routes>
+      <CategoryProvider>
+        <CartContextProvider>
+          <BrowserRouter>
+              <Routes>
+                  {/* non-protected routes */}
+                  <Route element={<UnProtectedLayout/>}>
+                    <Route path='/signUp' element={<SignUp/>}></Route>
+                    <Route path='/login' element={<Login/>}></Route>
+                    <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
+                    <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
+                  </Route>
 
-              {/* non-protected routes */}
-              <Route element={<UnProtectedLayout/>}>
-                <Route path='/signUp' element={<SignUp/>}></Route>
-                <Route path='/login' element={<Login/>}></Route>
-                <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
-                <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
-              </Route>
+                  {/* protected routes */}
+                  <Route element={<ProtectedNavbarLayout/>}>
+                    <Route path='/' element={<HomePage/>}></Route>
+                    <Route path='/product/:productId' element={<ProductDetailPage/>}></Route>
+                    <Route path='/productsCart' element={<CartPage/>}></Route>
+                  </Route>
 
-              {/* protected routes */}
-              <Route element={<ProtectedNavbarLayout/>}>
-                <Route path='/' element={<HomePage/>}></Route>
-                <Route path='/product/:productId' element={<ProductDetailPage/>}></Route>
-              </Route>
-
-              <Route path='*' element={<NotFound/>}></Route>
-          </Routes>
-      </BrowserRouter>
+                  <Route path='*' element={<NotFound/>}></Route>
+              </Routes>
+          </BrowserRouter>
+        </CartContextProvider>
+      </CategoryProvider>
     </ProductProvider>
     </div>
   )

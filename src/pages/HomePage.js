@@ -12,45 +12,36 @@ import Pagination from 'react-bootstrap/Pagination';
 import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { useContext } from 'react'
 import { ProdutContext, useProducts } from '../store/ProductContext'
+import useApi from '../hooks/useApi'
+import { useCategories } from '../store/CategoriesContext'
 
 function HomePage() {
-  // let [products, setProducts] = useState([])
   const {products, setProducts} = useProducts()
   let [loading, setLoading] = useState(true)
-  // let [page, setPage] = useState(1)
   const {page, setPage} = useProducts()
-  // let [pageinationDetail, setPaginationDetail] = useState({
-  //   "current_page": 0,
-  //   "total_count": 0,
-  //   "total_pages": 0,
-  // })
   const {pageinationDetail, setPaginationDetail} = useProducts()
-  // let [search, setSearch] = useState("")
   const {search, setSearch} = useProducts()
+  const {categories, setCategories} = useCategories()
+
+  const {loading: categoryApiLoading, data:categoryApidata, error: categoryApiError} = useApi("GET", "http://localhost:8000/api/categories/read")
+  const {loading: productsApiLoading, data:productsApidata, error: productsApiError} = useApi("GET", `http://localhost:8000/api/product/read?page=${page}&search=${search}`)
+
+  useEffect(()=> {
+    if(categoryApidata) {
+      setCategories(categoryApidata.data.categories)
+    }
+  }, [categoryApidata])
 
   useEffect(() => {
-      axios({
-      method: 'get',
-      url: `http://localhost:8000/api/product/read?page=${page}&search=${search}`,
-      headers: {
-        'token': localStorage.getItem('token')
-      }
-    })
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-      setProducts(response.data.data.products)
+    if(productsApidata) {
+      setProducts(productsApidata.data.products)
       setPaginationDetail({
-        'current_page': response.data.data.current_page,
-        'total_count': response.data.data.total_count,
-        'total_pages': response.data.data.total_pages,
+        'current_page': productsApidata.data.current_page,
+        'total_count': productsApidata.data.total_count,
+        'total_pages': productsApidata.data.total_pages,
       })
-    })
-    .catch(function (error) {
-      console.log(error);
-    }).finally(() => {
-      setLoading(false)
-    });
-  }, [page, search])
+    }
+  }, [productsApidata, page, search])
 
   const productAdd = (product) => {
     const new_products = [ product, ...products]
@@ -76,17 +67,17 @@ function HomePage() {
               <AddProduct productAdd={productAdd}/>
               <div className='clearfix'></div>
               <Row>
-                {loading && <Col md={12}>Loading products....</Col>}
-                {!loading && products.map(p => {
+                {productsApiLoading && <Col md={12}>Loading products....</Col>}
+                {!productsApiLoading && products.map(p => {
                   return (
                     <Col md={3} className='p-2'>
                       <Product product={p} />
                     </Col>
                   )
                 })}
-                {!loading && !products.length && <Col md={12}>No products found</Col>}
+                {!productsApiLoading && !products.length && <Col md={12}>No products found</Col>}
                 <Col md={12} className='mt-4 d-flex justify-content-end'>
-                {!loading && <PaginationControl
+                {!productsApiLoading && <PaginationControl
                   page={page}
                   between={4}
                   total={pageinationDetail.total_count}
